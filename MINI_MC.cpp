@@ -40,7 +40,7 @@ void Model_Segment::MINI_MC(int nCycle)
                 Segment[rSegment].coordinate[2] = temp_coordinate[2];
             }
         }
-        if(!(mccount%step_AVG)) Mol2_File_Write(false);
+        //if(!(mccount%step_AVG)) Mol2_File_Write(false);
     }
     for(int mccount=0; mccount<nCycle/2; mccount++)
     {
@@ -90,7 +90,7 @@ void Model_Segment::MINI_MC(int nCycle)
                     {
                         double inv_distance2 = 1.0 / distance2;
                         double inv_distance6 = pow(inv_distance2, 3.0);
-                        pot_after += 4 * inv_distance6 * (inv_distance6 - 1.0) - potential_rcut;
+                        pot_after += 4 *  inv_distance6 * (inv_distance6 - 1.0) - potential_rcut;
                     }
                 }
             }
@@ -110,6 +110,6 @@ void Model_Segment::MINI_MC(int nCycle)
                 Segment[rSegment].coordinate[2] = temp_coordinate[2];
             }
         }
-        if(!(mccount%step_AVG)) Mol2_File_Write(false);
+        //if(!(mccount%step_AVG)) Mol2_File_Write(false);
     }
 }

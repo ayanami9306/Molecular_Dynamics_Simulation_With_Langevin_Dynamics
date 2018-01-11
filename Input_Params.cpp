@@ -33,6 +33,7 @@ void Model_Segment::Input_Params(char *filename)
         else if(!strcmp(property_name, "boundaryy")) BOUNDARY_SIZE_Y = atof(property_value);
         else if(!strcmp(property_name, "boundaryz")) BOUNDARY_SIZE_Z = atof(property_value);
         else if(!strcmp(property_name, "corenum")) pragma_core = atoi(property_value);
+        else if(!strcmp(property_name, "epsilon")) epsilon = atof(property_value);
     }
 }
 

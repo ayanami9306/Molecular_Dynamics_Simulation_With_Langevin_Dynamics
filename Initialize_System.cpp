@@ -10,7 +10,7 @@
 
 void Model_Segment::Initialize_System(int nTypes)
 {
-    char mol2_file[50] = "Dendronized.mol2";
+    //char mol2_file[50] = "Dendronized.mol2";
     //Mol2_File_Read(mol2_file);
     Initialize_Coordinate(nTypes);
     inv_nParticle = 1/(double)nParticle;
@@ -111,7 +111,7 @@ void Model_Segment::Initialize_Velocity()
     
     for(int i=0; i<nParticle; i++)
         for(int j=0; j<3; j++) Segment[i].velocity[j] -= vCM[j];
-    
+    =9
     double initial_Ek = 0;
     for(int i=0; i<nParticle; i++)
         for(int j=0; j<3; j++) initial_Ek += pow(Segment[i].velocity[j], 2.0);

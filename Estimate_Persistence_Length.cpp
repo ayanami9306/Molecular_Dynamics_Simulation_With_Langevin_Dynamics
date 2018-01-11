@@ -25,7 +25,7 @@ void Model_Segment::Estimate_Lp(double * Lp)
     {
         for(int i = 1; i<backbone_num  - s; i++)
         {
-            double pair_distance_pre[3];
+              double pair_distance_pre[3];
             double pair_distance_cur[3];
             
             Get_Distance2(i, i-1, pair_distance_pre);

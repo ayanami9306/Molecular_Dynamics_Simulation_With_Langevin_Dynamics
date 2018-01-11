@@ -62,6 +62,7 @@ private:
     double rMax;
     int nParticle;
     double Rg;
+    double epsilon;
     
 //methods
 public:

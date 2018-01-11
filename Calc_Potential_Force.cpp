@@ -27,7 +27,7 @@ double Model_Segment::Calc_Lennard_Jones_Potential()
             //so,f_LJ = 48*epsilon*((sigma/r)^12 - 0.5*(sigma/r)^6)*(vector_r)/r^2
             //f_LJ = -du/(dr)*vector_r/abs(r)
             //else , 0
-            double pair_force = 48.0 * inv_distance2 * inv_distance6 * (inv_distance6 - 0.5);
+            double pair_force = 48.0 * epsilon * inv_distance2 * inv_distance6 * (inv_distance6 - 0.5);
             pair_distance[0] *= pair_force;
             pair_distance[1] *= pair_force;
             pair_distance[2] *= pair_force;
@@ -46,7 +46,7 @@ double Model_Segment::Calc_Lennard_Jones_Potential()
             //#pragma omp atomic
             Segment[num2].acceleration[2] -= pair_distance[2];
             //calc potential energy : lennard-jones potential
-            pot_temp += 4 * inv_distance6 * (inv_distance6 - 1.0) - potential_rcut;
+            pot_temp += 4 * epsilon * inv_distance6 * (inv_distance6 - 1.0) - potential_rcut;
         }
     }
     return pot_temp;
