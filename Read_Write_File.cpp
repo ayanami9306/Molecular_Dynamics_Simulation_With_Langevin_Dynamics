@@ -1,11 +1,3 @@
-//
-//  Read_Write_File.cpp
-//  Molecular Dynamics
-//
-//  Created by Nozomi on 2017. 11. 14..
-//  Copyright © 2017년 JiHoon. All rights reserved.
-//
-
 #include "Molecular_Model.hpp"
 
 void Model_Segment::Read_State(char *filename)
@@ -37,14 +29,15 @@ void Model_Segment::Write_State(char *filename)
     fclose(fp);
 }
 
+//don't use for dendronized polymer(some bugs about VMD or Material Studio)
 void Model_Segment::PDB_File_Write(bool is_new_file)
 {
     FILE *fp_pdb;
     if(is_new_file)
     {
-        fp_pdb = fopen(pdb_filename, "w");
+        fp_pdb = fopen(traj_filename, "w");
     }
-    else fp_pdb = fopen(pdb_filename, "a");
+    else fp_pdb = fopen(traj_filename, "a");
     //fprintf(fp_pdb, "MODEL%9.4lf\n", time_Now);
     //print HETATM section
     for(int i=0; i<nParticle; i++)
@@ -77,16 +70,16 @@ void Model_Segment::Mol2_File_Write(bool is_new_file)
     FILE *fp_mol;
     if(is_new_file)
     {
-        fp_mol = fopen(pdb_filename, "w");
+        fp_mol = fopen(traj_filename, "w");
         
         time_t current_time;
         time(&current_time);
         struct tm t = *localtime(&current_time);
         
         //write file comment
-        fprintf(fp_mol, "#\tName : %s\n#\tCreating user name : Park Ji Hoon\n#\tCreating time : %dyear %dmonth %dday %dhour %dmin %dsec\n\n", pdb_filename, t.tm_year+1900, t.tm_mon+1, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec);
+        fprintf(fp_mol, "#\tName : %s\n#\tCreating time : %dyear %dmonth %dday %dhour %dmin %dsec\n\n", traj_filename, t.tm_year+1900, t.tm_mon+1, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec);
     }
-    else fp_mol = fopen(pdb_filename, "a");
+    else fp_mol = fopen(traj_filename, "a");
     
     //Get Total bond number
     int Total_Bond_Number = 0;
@@ -94,7 +87,7 @@ void Model_Segment::Mol2_File_Write(bool is_new_file)
     Total_Bond_Number /= 2;
     
     fprintf(fp_mol, "\n@<TRIPOS>MOLECULE\n%s\n%d\t%d\t0\t0\t0\nSMALL\nNO_CHARGES\n\n",
-            pdb_filename, nParticle, Total_Bond_Number);
+            traj_filename, nParticle, Total_Bond_Number);
     
     
     fprintf(fp_mol, "\n@<TRIPOS>ATOM\n");

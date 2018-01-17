@@ -1,17 +1,7 @@
-//
-//  Initialize_System.cpp
-//  Molecular Dynamics
-//
-//  Created by Nozomi on 2017. 11. 14..
-//  Copyright © 2017년 JiHoon. All rights reserved.
-//
-
 #include "Molecular_Model.hpp"
 
 void Model_Segment::Initialize_System(int nTypes)
 {
-    //char mol2_file[50] = "Dendronized.mol2";
-    //Mol2_File_Read(mol2_file);
     Initialize_Coordinate(nTypes);
     inv_nParticle = 1/(double)nParticle;
     Initialize_Velocity();
@@ -19,72 +9,49 @@ void Model_Segment::Initialize_System(int nTypes)
 
 void Model_Segment::Initialize_Coordinate(int nTypes)
 {
-    nParticle = 0;
-    //octane, for test
+    //dedronized polymer
     if(nTypes == 1)
     {
-        nParticle = backbone_num;
-        double x = BOUNDARY_SIZE_X/2 - (nParticle/2) * (rcut/2), y = BOUNDARY_SIZE_Y/2, z = BOUNDARY_SIZE_Z/2;
-        for(int i=0; i<nParticle; i++)
+        double x = 0, y = 0, z= 0;
+        for(int i=0;i<dp_backbone;i++)
         {
             double torsional_angle = ((double)rand()*inv_RAND_MAX)*2*PI;
             double bond_angle = ((double)rand()*inv_RAND_MAX)*2*PI;
             Segment[i].coordinate[0] = x + bond_length_0 * sin(bond_angle)*cos(torsional_angle);
-            Segment[i].coordinate[1] = y + bond_length_0 * sin(bond_angle)*sin(torsional_angle);
+            Segment[i].coordinate[1] = y + bond_length_0 * sin(bond_angle)*cos(torsional_angle);
             Segment[i].coordinate[2] = z + bond_length_0 * cos(bond_angle);
             Segment[i].linked_segment_num = 0;
+            Segment[i].segment_type = 0;
             x = Segment[i].coordinate[0];
             y = Segment[i].coordinate[1];
             z = Segment[i].coordinate[2];
-            Segment[i].segment_type = 0;
-            if(i != nParticle-1) Segment[i].linked_segment[Segment[i].linked_segment_num++] = i+1;
-            if(i != 0) Segment[i].linked_segment[Segment[i].linked_segment_num++] = i-1;
-        }
-    }
-    //dedronized polymer
-    else if(nTypes == 2)
-    {
-        //int backbone_interval = 4;
-        int side_generation = 0;
-        //int branch_num = 2;
-        backbone_num = 20;
-        double x = BOUNDARY_SIZE_X/2 - (backbone_num/2) * (bond_length_0/2), y = BOUNDARY_SIZE_Y/2, z= BOUNDARY_SIZE_Z/2;
-        for(int i=0;i<backbone_num;i++)
-        {
-            Segment[i].coordinate[0] = x+bond_length_0 * (1+(rand()*inv_RAND_MAX-0.5)*0.1);
-            Segment[i].coordinate[1] = y + ((rand()*inv_RAND_MAX-0.5)*0.1);
-            Segment[i].coordinate[2] = z + ((rand()*inv_RAND_MAX-0.5)*0.1);
-            x = Segment[i].coordinate[0];
-            Segment[i].linked_segment_num = 0;
-            Segment[i].segment_type = 0;
-            if(i != backbone_num-1) Segment[i].linked_segment[Segment[i].linked_segment_num++] = i+1;
+            if(i != dp_backbone-1) Segment[i].linked_segment[Segment[i].linked_segment_num++] = i+1;
             if(i != 0) Segment[i].linked_segment[Segment[i].linked_segment_num++] = i-1;
             nParticle++;
         }
-        for(int i=0; i<backbone_num;i++)
-        {
-            recursive_branch(i, side_generation);
-        }
+        for(int i=0; i<dp_backbone;i+=space_sidechain) recursive_branch(i, generation_dendron);
     }
 }
 
-void Model_Segment::recursive_branch(int i, int generation)
+void Model_Segment::recursive_branch(int parent, int generation)
 {
-   
     if(generation)
     {
-        double torsional_angle = (double)(rand()%180)*PI/(180.0);
-        double bond_angle = (double)(rand()%90)*PI/(180.0);
-        Segment[nParticle].coordinate[0] = Segment[i].coordinate[0] + bond_length_0 * sin(bond_angle)*cos(torsional_angle);
-        Segment[nParticle].coordinate[1] = Segment[i].coordinate[1] + bond_length_0 * sin(bond_angle)*sin(torsional_angle);
-        Segment[nParticle].coordinate[2] = Segment[i].coordinate[2] + bond_length_0 * cos(bond_angle);
-        Segment[i].linked_segment[Segment[i].linked_segment_num++] = nParticle;
-        Segment[nParticle].segment_type = 1;
-        Segment[nParticle].linked_segment[Segment[nParticle].linked_segment_num++] = i;
-        nParticle++;
-        int parent_node = nParticle -1;
-        recursive_branch(parent_node, generation-1);
-        recursive_branch(parent_node, generation-1);
+        int previous_node = parent;
+        for(int i=0; i<dp_dendron; i++)
+        {
+            double torsional_angle = ((double)rand()*inv_RAND_MAX)*2*PI;
+            double bond_angle = ((double)rand()*inv_RAND_MAX)*2*PI;
+            Segment[nParticle].coordinate[0] = Segment[previous_node].coordinate[0] + bond_length_0 * sin(bond_angle)*cos(torsional_angle);
+            Segment[nParticle].coordinate[1] = Segment[previous_node].coordinate[1] + bond_length_0 * sin(bond_angle)*sin(torsional_angle);
+            Segment[nParticle].coordinate[2] = Segment[previous_node].coordinate[2] + bond_length_0 * cos(bond_angle);
+            Segment[nParticle].segment_type = 1;
+            Segment[previous_node].linked_segment[Segment[previous_node].linked_segment_num++] = nParticle;
+            Segment[nParticle].linked_segment[Segment[nParticle].linked_segment_num++] = previous_node;
+            previous_node = nParticle;
+            nParticle++;
+        }
+        for(int i=0; i<number_branch; i++) recursive_branch(previous_node, generation-1);
     }
     else return;
 }
@@ -111,7 +78,7 @@ void Model_Segment::Initialize_Velocity()
     
     for(int i=0; i<nParticle; i++)
         for(int j=0; j<3; j++) Segment[i].velocity[j] -= vCM[j];
-    =9
+    
     double initial_Ek = 0;
     for(int i=0; i<nParticle; i++)
         for(int j=0; j<3; j++) initial_Ek += pow(Segment[i].velocity[j], 2.0);

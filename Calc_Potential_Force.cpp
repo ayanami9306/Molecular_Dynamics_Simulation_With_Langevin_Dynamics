@@ -1,11 +1,3 @@
-//
-//  Calc_Potential_Force.cpp
-//  Molecular Dynamics
-//
-//  Created by Nozomi on 2017. 11. 14..
-//  Copyright © 2017년 JiHoon. All rights reserved.
-//
-
 #include "Molecular_Model.hpp"
 
 double Model_Segment::Calc_Lennard_Jones_Potential()

@@ -1,11 +1,3 @@
-//
-//  Input_Params.cpp
-//  Molecular Dynamics
-//
-//  Created by Nozomi on 2017. 11. 14..
-//  Copyright © 2017년 JiHoon. All rights reserved.
-//
-
 #include "Molecular_Model.hpp"
 
 void Model_Segment::Input_Params(char *filename)
@@ -33,7 +25,11 @@ void Model_Segment::Input_Params(char *filename)
         else if(!strcmp(property_name, "boundaryy")) BOUNDARY_SIZE_Y = atof(property_value);
         else if(!strcmp(property_name, "boundaryz")) BOUNDARY_SIZE_Z = atof(property_value);
         else if(!strcmp(property_name, "corenum")) pragma_core = atoi(property_value);
-        else if(!strcmp(property_name, "epsilon")) epsilon = atof(property_value);
+        else if(!strcmp(property_name, "dp_backbone")) dp_backbone = atoi(property_value);
+        else if(!strcmp(property_name, "dp_dendron")) dp_dendron = atoi(property_value);
+        else if(!strcmp(property_name, "generation_dendron")) generation_dendron = atoi(property_value);
+        else if(!strcmp(property_name, "number_branch")) number_branch   = atoi(property_value);
+        else if(!strcmp(property_name, "space_sidechain")) space_sidechain   = atoi(property_value);
     }
 }
 
@@ -57,11 +53,15 @@ void Model_Segment::Set_Params()
     inv_step_AVG = 1.0 / (double)step_AVG;
     
     sprintf(dat_filename, "%s_DAT.csv", write_filename);
-    sprintf(pdb_filename, "%s.mol2", write_filename);
+    sprintf(traj_filename, "%s.mol2", write_filename);
+    sprintf(Lp_filename, "%s_Lp.csv", write_filename)
     if(time_Now == 0)
     {
         FILE *fp = fopen(dat_filename, "w");
         fprintf(fp, "TIME,vCM,HAM,POT,KIN\n");
+        fclose(fp);
+        fp = fopen(Lp_filename, "w");
+        fprintf(fp, "s,value\n");
         fclose(fp);
     }
     

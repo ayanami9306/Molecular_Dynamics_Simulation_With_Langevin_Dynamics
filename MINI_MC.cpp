@@ -1,11 +1,3 @@
-//
-//  MINI_MC.cpp
-//  Molecular Dynamics
-//
-//  Created by Nozomi on 2017. 11. 23..
-//  Copyright © 2017년 JiHoon. All rights reserved.
-//
-
 #include "Molecular_Model.hpp"
 void Model_Segment::MINI_MC(int nCycle)
 {
@@ -40,7 +32,6 @@ void Model_Segment::MINI_MC(int nCycle)
                 Segment[rSegment].coordinate[2] = temp_coordinate[2];
             }
         }
-        //if(!(mccount%step_AVG)) Mol2_File_Write(false);
     }
     for(int mccount=0; mccount<nCycle/2; mccount++)
     {
@@ -110,6 +101,5 @@ void Model_Segment::MINI_MC(int nCycle)
                 Segment[rSegment].coordinate[2] = temp_coordinate[2];
             }
         }
-        //if(!(mccount%step_AVG)) Mol2_File_Write(false);
     }
 }

@@ -1,8 +1,3 @@
-//
-//  Molecular_Model.cpp
-//  Molecular Dynamics
-//
-
 #include "Molecular_Model.hpp"
 
 Model_Segment::Model_Segment()

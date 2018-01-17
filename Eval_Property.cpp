@@ -1,11 +1,3 @@
-//
-//  Eval_Property.cpp
-//  Molecular Dynamics
-//
-//  Created by Nozomi on 2017. 11. 14..
-//  Copyright © 2017년 JiHoon. All rights reserved.
-//
-
 #include "Molecular_Model.hpp"
 
 void Model_Segment::Evaluate_Properties()
@@ -16,8 +8,11 @@ void Model_Segment::Evaluate_Properties()
     double Hamiltonian_Energy = pot_step + kin_step;
     
     FILE *fp = fopen(dat_filename, "a");
-    //double persistance_length = Estimate_Lp();
     fprintf(fp, "%.4lf,%.4lf,%.4lf,%.4lf,%.4lf\n",time_Now, vCM_Total, Hamiltonian_Energy, pot_step, kin_step);
+    fclose(fp);
+    fp = fopen(Lp_filename, "a");
+    for(int i=0;i<dp_backbone/2; i++)
+        fprintf(fp, "%d,%.4lf\n",i,Lp[i]);
     fclose(fp);
     
     pot_step = 0; kin_step = 0; vCM_Total = 0;
