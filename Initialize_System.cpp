@@ -9,6 +9,7 @@ void Model_Segment::Initialize_System(int nTypes)
 
 void Model_Segment::Initialize_Coordinate(int nTypes)
 {
+    nParticle = 0;
     //dedronized polymer
     if(nTypes == 1)
     {

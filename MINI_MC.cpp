@@ -60,6 +60,7 @@ void Model_Segment::MINI_MC(int nCycle)
                 double distance = sqrt(Get_Distance2(rSegment, num2, bond_distance));
                 double distance_ratio = distance/distance_FENE_0;
                 if(distance < distance_FENE_0) pot_pre += -0.5*k_FENE*distance_FENE_0*distance_FENE_0*log(1-distance_ratio*distance_ratio);
+                else pot_pre += 10E99;
             }
             double theta = 2*PI*((double)rand()/RAND_MAX), phi = 2*PI*((double)rand()/RAND_MAX), radius = rMax*((double)rand()/RAND_MAX);
             double temp_coordinate[3] =
@@ -93,6 +94,7 @@ void Model_Segment::MINI_MC(int nCycle)
                 double distance = sqrt(Get_Distance2(rSegment, num2, bond_distance));
                 double distance_ratio = distance/distance_FENE_0;
                 if(distance < distance_FENE_0) pot_after += -0.5*k_FENE*distance_FENE_0*distance_FENE_0*log(1-distance_ratio*distance_ratio);
+                else pot_after += 10E99;
             }
             
             double delta_pot = pot_after - pot_pre;
