@@ -11,8 +11,7 @@ void Model_Segment::Evaluate_Properties()
     fprintf(fp, "%.4lf,%.4lf,%.4lf,%.4lf,%.4lf\n",time_Now, vCM_Total, Hamiltonian_Energy, pot_step, kin_step);
     fclose(fp);
     fp = fopen(Lp_filename, "a");
-    for(int i=0;i<dp_backbone/2; i++)
-        fprintf(fp, "%d,%.4lf\n",i,Lp[i]);
+    for(int i=0;i<=dp_backbone/2; i++) fprintf(fp, "%d, %lf\n", i, Lp[i]);
     fclose(fp);
     
     pot_step = 0; kin_step = 0; vCM_Total = 0;

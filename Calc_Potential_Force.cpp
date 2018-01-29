@@ -9,6 +9,10 @@ double Model_Segment::Calc_Lennard_Jones_Potential()
         int num1 = NebrList_1[i], num2 = NebrList_2[i];
         double pair_distance[3];
         double distance2 = Get_Distance2(num1, num2, pair_distance);
+        //if(sqrt(distance2)<0.2)
+        //{
+          //  printf("error");
+        //}
         if(distance2 <= rcut2)
         {
             double inv_distance2 = 1.0 / distance2;
@@ -47,9 +51,9 @@ double Model_Segment::Calc_Lennard_Jones_Potential()
 double Model_Segment::Calc_Bond_Length_Potential_AND_Apply_Langevin()
 {
     double pot_temp = 0;
-    double random_num[10000];
+    double random_num[100000];
     for(int i=0;i<nParticle*3;i++) random_num[i] = Rand_Standard_Normal_Dist();
-//#pragma omp parallel reduction(+:                                                                                                                    pot_temp)
+//#pragma omp parallel reduction(+:                                                                                                                  pot_temp)
     {
 //#pragma omp for
         for(int i=0; i<nParticle; i++)
@@ -61,26 +65,31 @@ double Model_Segment::Calc_Bond_Length_Potential_AND_Apply_Langevin()
                     int num2 = Segment[i].linked_segment[j];
                     double bond_distance[3];
                     double distance = sqrt(Get_Distance2(i, num2, bond_distance));
-                    //U_bond = 0.5*k*(r-r0)^2, so
-                    //f_bond = -k(r-r0)*r_vector/r
-                    double bond_force = -k_spring * (distance - bond_length_0) / distance;
-                    bond_distance[0] *= bond_force;
-                    bond_distance[1] *= bond_force;
-                    bond_distance[2] *= bond_force;
-                    //#pragma omp atomic
-                    Segment[i].acceleration[0] += bond_distance[0];
-                    //#pragma omp atomic
-                    Segment[i].acceleration[1] += bond_distance[1];
-                    //#pragma omp atomic
-                    Segment[i].acceleration[2] += bond_distance[2];
-                    //#pragma omp atomic
-                    Segment[num2].acceleration[0] -= bond_distance[0];
-                    //#pragma omp atomic
-                    Segment[num2].acceleration[1] -= bond_distance[1];
-                    //#pragma omp atomic
-                    Segment[num2].acceleration[2] -= bond_distance[2];
-                    
-                    pot_temp += pow((distance - bond_length_0), 2.0);
+                    double distance_ratio = distance / distance_FENE_0;
+                    //FENE Potential
+                    //U_bond = -0.5*k*R0^2*ln(1-(r/R0)^2), so
+                    //f_bond = k/(1-(r/R0)^2) * dr
+                    if(distance < distance_FENE_0)
+                    {
+                        double bond_force = -k_FENE / (1-distance_ratio*distance_ratio);
+                        bond_distance[0] *= bond_force;
+                        bond_distance[1] *= bond_force;
+                        bond_distance[2] *= bond_force;
+                        //#pragma omp atomic
+                        Segment[i].acceleration[0] += bond_distance[0];
+                        //#pragma omp atomic
+                        Segment[i].acceleration[1] += bond_distance[1];
+                        //#pragma omp atomic
+                        Segment[i].acceleration[2] += bond_distance[2];
+                        //#pragma omp atomic
+                        Segment[num2].acceleration[0] -= bond_distance[0];
+                        //#pragma omp atomic
+                        Segment[num2].acceleration[1] -= bond_distance[1];
+                        //#pragma omp atomic
+                        Segment[num2].acceleration[2] -= bond_distance[2];
+                        
+                        pot_temp += log(1-distance_ratio*distance_ratio);
+                    }
                 }
             }
             //add random force for speed
@@ -91,5 +100,5 @@ double Model_Segment::Calc_Bond_Length_Potential_AND_Apply_Langevin()
             Segment[i].acceleration[2] += rand_deviation * random_num[ran_pos+2];
         }
     }
-    return 0.5*k_spring*pot_temp;
+    return -0.5*k_FENE*distance_FENE_0*distance_FENE_0;
 }

@@ -10,17 +10,16 @@ void Model_Segment::Input_Params(char *filename)
         tolower(property_name);
         if(!strcmp(property_name, "deltat")) deltaT = atof(property_value);
         else if(!strcmp(property_name, "rcut")) rcut = atof(property_value);
-        else if(!strcmp(property_name, "kt_0")) kT_0 = atof(property_value);
+        else if(!strcmp(property_name, "kt_0")) kT_0    = atof(property_value);
         else if(!strcmp(property_name, "step_avg")) step_AVG = atoi(property_value);
         else if(!strcmp(property_name, "segment_mass")) segment_mass = atof(property_value);
         else if(!strcmp(property_name, "limit_cycle")) Limit_Cycle = atof(property_value);
         else if(!strcmp(property_name, "rcut")) rcut = atof(property_value);
-        else if(!strcmp(property_name, "zeta")) zeta = atof(property_value);
-        else if(!strcmp(property_name, "k_spring")) k_spring = atof(property_value);
-        else if(!strcmp(property_name, "bond_length_0")) bond_length_0 = atof(property_value);
+        else if(!strcmp(property_name, "bond_length_0")) distance_FENE_0 = atof(property_value);
         else if(!strcmp(property_name, "write_filename")) strcpy(write_filename, property_value);
         else if(!strcmp(property_name, "time_now")) time_Now = atof(property_value);
         else if(!strcmp(property_name, "radius_nebrshell")) radius_NebrShell = atof(property_value);
+        else if(!strcmp(property_name, "epsilon")) epsilon = atof(property_value);
         else if(!strcmp(property_name, "boundaryx")) BOUNDARY_SIZE_X = atof(property_value);
         else if(!strcmp(property_name, "boundaryy")) BOUNDARY_SIZE_Y = atof(property_value);
         else if(!strcmp(property_name, "boundaryz")) BOUNDARY_SIZE_Z = atof(property_value);
@@ -47,14 +46,15 @@ void Model_Segment::Set_Params()
     inv_nParticle = 1/(double)nParticle;
     //kT_0 = epsilon * k_b * T
     rand_deviation = sqrt(2*kT_0*segment_mass*zeta/deltaT);
-    rMax = bond_length_0*0.03;
+    rMax = distance_FENE_0*0.67*0.03;
     potential_rcut = 4 * inverse_rcut6 * (inverse_rcut6 - 1.0);
+    k_FENE = kT_0 * 30.0 / 1.2;
     
     inv_step_AVG = 1.0 / (double)step_AVG;
     
     sprintf(dat_filename, "%s_DAT.csv", write_filename);
     sprintf(traj_filename, "%s.mol2", write_filename);
-    sprintf(Lp_filename, "%s_Lp.csv", write_filename)
+    sprintf(Lp_filename, "%s_Lp.csv", write_filename);
     if(time_Now == 0)
     {
         FILE *fp = fopen(dat_filename, "w");
