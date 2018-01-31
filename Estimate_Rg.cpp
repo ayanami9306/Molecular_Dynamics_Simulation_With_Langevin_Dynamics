@@ -29,3 +29,4 @@ double Model_Segment::CALCULATE_RADIUS_OF_GYRATION()
     }
     return sqrt(Rg/nParticle);
 }
+

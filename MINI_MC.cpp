@@ -23,7 +23,7 @@ void Model_Segment::MINI_MC(int nCycle)
                 double pair_distnace[3];
                 double num2 = Segment[rSegment].linked_segment[j];
                 double distance = sqrt(Get_Distance2(rSegment, num2, pair_distnace));
-                if(distance > 1.02*distance_FENE_0*0.67 || distance < 0.98*distance_FENE_0*0.67) check = false;
+                if(distance > 1.02*bond_length_FENE_0 * 0.67 || distance < 0.98*bond_length_FENE_0 * 0.67) check = false;
             }
             if(!check)
             {
@@ -49,7 +49,7 @@ void Model_Segment::MINI_MC(int nCycle)
                     {
                         double inv_distance2 = 1.0 / distance2;
                         double inv_distance6 = pow(inv_distance2, 3.0);
-                        pot_pre += 4 * epsilon * inv_distance6 * (inv_distance6 - 1.0) - potential_rcut;
+                        pot_pre += 4 * inv_distance6 * (inv_distance6 - 1.0) - potential_rcut;
                     }
                 }
             }
@@ -58,9 +58,8 @@ void Model_Segment::MINI_MC(int nCycle)
                 int num2 = Segment[rSegment].linked_segment[j];
                 double bond_distance[3];
                 double distance = sqrt(Get_Distance2(rSegment, num2, bond_distance));
-                double distance_ratio = distance/distance_FENE_0;
-                if(distance < distance_FENE_0) pot_pre += -0.5*k_FENE*distance_FENE_0*distance_FENE_0*log(1-distance_ratio*distance_ratio);
-                else pot_pre += 10E99;
+                if(distance < bond_length_FENE_0) pot_pre += -0.5*k_FENE*bond_length_FENE_0*(1-pow(distance/bond_length_FENE_0, 2.0));
+                else pot_pre+=10E99;
             }
             double theta = 2*PI*((double)rand()/RAND_MAX), phi = 2*PI*((double)rand()/RAND_MAX), radius = rMax*((double)rand()/RAND_MAX);
             double temp_coordinate[3] =
@@ -83,7 +82,7 @@ void Model_Segment::MINI_MC(int nCycle)
                     {
                         double inv_distance2 = 1.0 / distance2;
                         double inv_distance6 = pow(inv_distance2, 3.0);
-                        pot_after += 4 *  epsilon * inv_distance6 * (inv_distance6 - 1.0) - potential_rcut;
+                        pot_after += 4 *  inv_distance6 * (inv_distance6 - 1.0) - potential_rcut;
                     }
                 }
             }
@@ -92,9 +91,8 @@ void Model_Segment::MINI_MC(int nCycle)
                 int num2 = Segment[rSegment].linked_segment[j];
                 double bond_distance[3];
                 double distance = sqrt(Get_Distance2(rSegment, num2, bond_distance));
-                double distance_ratio = distance/distance_FENE_0;
-                if(distance < distance_FENE_0) pot_after += -0.5*k_FENE*distance_FENE_0*distance_FENE_0*log(1-distance_ratio*distance_ratio);
-                else pot_after += 10E99;
+                if(distance < bond_length_FENE_0) pot_after += -0.5*k_FENE*bond_length_FENE_0*(1-pow(distance/bond_length_FENE_0, 2.0));
+                else pot_after+=10E99;
             }
             
             double delta_pot = pot_after - pot_pre;

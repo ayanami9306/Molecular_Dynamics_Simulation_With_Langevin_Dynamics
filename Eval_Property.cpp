@@ -30,3 +30,4 @@ double Model_Segment::Get_Distance2(int num1, int num2, double * dr)
     //Periodic_Length(dr);
     return dr[0]*dr[0] + dr[1]*dr[1] + dr[2]*dr[2];
 }
+

@@ -1,7 +1,6 @@
 #include "Molecular_Model.hpp"
 
 #define scalar_multiply(a, b) (a[0]*b[0] + a[1]*b[1] + a[2]*b[2])
-#define absf(x) (x>0?x:-x)
 
 void Model_Segment::Estimate_Lp()
 {
@@ -13,8 +12,8 @@ void Model_Segment::Estimate_Lp()
         for(int i=1;i<dp_backbone-s;i++)
         {
             bond_length_pre = Get_Distance2(i, i-1, pair_distance_pre);
-            bond_length_cur = Get_Distance2(i+s, i+s-1, pair_distance_cur);            
+            bond_length_cur = Get_Distance2(i+s, i+s-1, pair_distance_cur);
             Lp[s] += scalar_multiply(pair_distance_pre, pair_distance_cur)/(sqrt(bond_length_pre*bond_length_cur)*(dp_backbone-s-1)*step_AVG);
         }
-     }
+    }
 }

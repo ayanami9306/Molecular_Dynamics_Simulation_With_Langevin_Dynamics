@@ -21,12 +21,12 @@ void Model_Segment::Compute_Forces()
     double inv_segment_mass = 1.0 / segment_mass;
     if(segment_mass != 1)
     {
-//#pragma omp parallel for
-            for(int i=0; i<nParticle; i++)
-            {
-                Segment[i].acceleration[0] *= inv_segment_mass;
-                Segment[i].acceleration[1] *= inv_segment_mass;
-                Segment[i].acceleration[2] *= inv_segment_mass;
-            }
+        //#pragma omp parallel for
+        for(int i=0; i<nParticle; i++)
+        {
+            Segment[i].acceleration[0] *= inv_segment_mass;
+            Segment[i].acceleration[1] *= inv_segment_mass;
+            Segment[i].acceleration[2] *= inv_segment_mass;
+        }
     }
 }

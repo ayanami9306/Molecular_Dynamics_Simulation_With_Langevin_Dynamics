@@ -10,16 +10,16 @@ void Model_Segment::Input_Params(char *filename)
         tolower(property_name);
         if(!strcmp(property_name, "deltat")) deltaT = atof(property_value);
         else if(!strcmp(property_name, "rcut")) rcut = atof(property_value);
-        else if(!strcmp(property_name, "kt_0")) kT_0    = atof(property_value);
+        else if(!strcmp(property_name, "kt_0")) kT_0 = atof(property_value);
         else if(!strcmp(property_name, "step_avg")) step_AVG = atoi(property_value);
         else if(!strcmp(property_name, "segment_mass")) segment_mass = atof(property_value);
         else if(!strcmp(property_name, "limit_cycle")) Limit_Cycle = atof(property_value);
         else if(!strcmp(property_name, "rcut")) rcut = atof(property_value);
-        else if(!strcmp(property_name, "bond_length_0")) distance_FENE_0 = atof(property_value);
+        else if(!strcmp(property_name, "zeta")) zeta = atof(property_value);
+        else if(!strcmp(property_name, "bond_length_fene_0")) bond_length_FENE_0 = atof(property_value);
         else if(!strcmp(property_name, "write_filename")) strcpy(write_filename, property_value);
         else if(!strcmp(property_name, "time_now")) time_Now = atof(property_value);
         else if(!strcmp(property_name, "radius_nebrshell")) radius_NebrShell = atof(property_value);
-        else if(!strcmp(property_name, "epsilon")) epsilon = atof(property_value);
         else if(!strcmp(property_name, "boundaryx")) BOUNDARY_SIZE_X = atof(property_value);
         else if(!strcmp(property_name, "boundaryy")) BOUNDARY_SIZE_Y = atof(property_value);
         else if(!strcmp(property_name, "boundaryz")) BOUNDARY_SIZE_Z = atof(property_value);
@@ -29,6 +29,7 @@ void Model_Segment::Input_Params(char *filename)
         else if(!strcmp(property_name, "generation_dendron")) generation_dendron = atoi(property_value);
         else if(!strcmp(property_name, "number_branch")) number_branch   = atoi(property_value);
         else if(!strcmp(property_name, "space_sidechain")) space_sidechain   = atoi(property_value);
+        else if(!strcmp(property_name, "epsilon")) epsilon = atof(property_value);
     }
 }
 
@@ -46,9 +47,9 @@ void Model_Segment::Set_Params()
     inv_nParticle = 1/(double)nParticle;
     //kT_0 = epsilon * k_b * T
     rand_deviation = sqrt(2*kT_0*segment_mass*zeta/deltaT);
-    rMax = distance_FENE_0*0.67*0.03;
+    rMax = bond_length_FENE_0*0.67*0.03;
     potential_rcut = 4 * inverse_rcut6 * (inverse_rcut6 - 1.0);
-    k_FENE = kT_0 * 30.0 / 1.2;
+    k_FENE = kT_0/1.2*30;
     
     inv_step_AVG = 1.0 / (double)step_AVG;
     

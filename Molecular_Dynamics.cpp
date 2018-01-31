@@ -7,6 +7,7 @@ void Model_Segment::Molecular_Dynamics()
     Mol2_File_Write(true);
     MINI_MC(100000);
     Build_NebrList();
+    double Rg = 0;
     for(int i=0;i<=dp_backbone/2; i++) Lp[i] = 0;
     for(int num_Cycle = 0; num_Cycle <= Limit_Cycle; num_Cycle++)
     {
@@ -14,6 +15,7 @@ void Model_Segment::Molecular_Dynamics()
         if(num_Cycle>Limit_Cycle/2)
         {
             Estimate_Lp();
+            Rg += CALCULATE_RADIUS_OF_GYRATION();
             if(!(num_Cycle % step_AVG) && num_Cycle)
             {
                 char temp_filename[100];
@@ -25,5 +27,7 @@ void Model_Segment::Molecular_Dynamics()
             }
         }
     }
+    printf("%lf\n", Rg/(Limit_Cycle/2));
 }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+
+
