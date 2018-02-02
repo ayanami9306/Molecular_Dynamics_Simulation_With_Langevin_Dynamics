@@ -2,7 +2,7 @@
 
 double Model_Segment::Measure_Radius_of_Gyration()
 {
-    //calculate radius of gyration
+    //calculate  radius of gyration
     double R_CM[3] =
     {
         0, 0, 0

@@ -64,7 +64,7 @@ double Model_Segment::Calc_Bond_Length_Potential_AND_Apply_Langevin()
                     if(distance < bond_length_FENE_0)
                     {
                         //FENE potential
-                        //U = -0.5*k*R0*ln(1-(r/R0)^2)) (r < R0), else U = inf
+                        //U = -0.5*k*R0^2*ln(1-(r/R0)^2)) (r < R0), else U = inf
                         //F = -k*r/(1-(r/R0)^2)
                         double distance_ratio = distance / bond_length_FENE_0;
                         double bond_force = -k_FENE/(1-pow(distance_ratio, 2.0));

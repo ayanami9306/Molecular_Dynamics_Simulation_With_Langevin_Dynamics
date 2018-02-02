@@ -5,7 +5,7 @@ void Model_Segment::Molecular_Dynamics()
     pot_step = 0; kin_step = 0; vCM_Total = 0;
     Set_Params();
     Mol2_File_Write(true);
-    MINI_MC(100000);
+    MINI_MC(50000);
     Build_NebrList();
     double Rg = 0;
     for(int i=0;i<=dp_backbone/2; i++) Lp[i] = 0;
@@ -22,7 +22,7 @@ void Model_Segment::Molecular_Dynamics()
                 sprintf(temp_filename, "%s_%08d", write_filename, num_Cycle);
                 //Write_State(temp_filename);
                 Mol2_File_Write(false);
-                Evaluate_Properties();
+                //Evaluate_Properties();
                 for(int i=0;i<=dp_backbone/2; i++) Lp[i] = 0;
             }
         }

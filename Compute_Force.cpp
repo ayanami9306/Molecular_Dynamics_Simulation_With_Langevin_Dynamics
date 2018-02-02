@@ -15,7 +15,7 @@ void Model_Segment::Compute_Forces()
     }
     
     //calculate force
-    //Lennard-Jones Potential
+    //Lennard-Jones Potential and Bond Stretching Potential
     pot_step += Calc_Lennard_Jones_Potential() + Calc_Bond_Length_Potential_AND_Apply_Langevin();
     // F = ma
     double inv_segment_mass = 1.0 / segment_mass;
