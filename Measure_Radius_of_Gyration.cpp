@@ -1,6 +1,6 @@
 #include "Molecular_Model.hpp"
 
-double Model_Segment::CALCULATE_RADIUS_OF_GYRATION()
+double Model_Segment::Measure_Radius_of_Gyration()
 {
     //calculate radius of gyration
     double R_CM[3] =

@@ -14,8 +14,8 @@ void Model_Segment::Molecular_Dynamics()
         Single_Step();
         if(num_Cycle>Limit_Cycle/2)
         {
-            Estimate_Lp();
-            Rg += CALCULATE_RADIUS_OF_GYRATION();
+            Measure_Persistence_Length();
+            Rg += Measure_Radius_of_Gyration();
             if(!(num_Cycle % step_AVG) && num_Cycle)
             {
                 char temp_filename[100];

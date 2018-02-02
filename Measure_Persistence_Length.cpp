@@ -2,7 +2,7 @@
 
 #define scalar_multiply(a, b) (a[0]*b[0] + a[1]*b[1] + a[2]*b[2])
 
-void Model_Segment::Estimate_Lp()
+void Model_Segment::Measure_Persistence_Length()
 {
     double pair_distance_pre[3];
     double pair_distance_cur[3];

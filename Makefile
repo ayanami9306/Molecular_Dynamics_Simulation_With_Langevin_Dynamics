@@ -1,0 +1,1 @@
+g++ -O2 -o MD main.cpp Measure_Radius_of_Gyration.cpp Calc_Potential_Force.cpp Compute_Force.cpp Measure_Persistence_Length.cpp Eval_Property.cpp Initialize_System.cpp Input_Params.cpp MINI_MC.cpp Molecular_Dynamics.cpp Molecular_Model.cpp NeighborList.cpp Periodic_System.cpp Rand_Standard_Normal_Dist.cpp Read_Write_File.cpp Single_Step.cpp tolower.cpp Velocity_Verlet.cpp -lm
