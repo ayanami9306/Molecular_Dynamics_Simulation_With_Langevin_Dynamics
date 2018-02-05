@@ -19,7 +19,7 @@ void Model_Segment::Evaluate_Properties()
 
 double Model_Segment::Get_V2(int i)
 {
-    return Segment[i].velocity[0]*Segment[i].velocity[0] + Segment[i].velocity[1]*Segment[i].velocity[1] + Segment[i].velocity[2]*Segment[i].velocity[2];
+    return Segment[i].velocity[0]*Segment[i].velocity[0] + Segment[i].velocity[1]*Segment[i].velocity[1] + Segment     [i].velocity[2]*Segment[i].velocity[2];
 }
 
 double Model_Segment::Get_Distance2(int num1, int num2, double * dr)

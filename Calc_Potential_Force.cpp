@@ -24,7 +24,6 @@ double Model_Segment::Calc_Lennard_Jones_Potential()
             pair_distance[1] *= pair_force;
             pair_distance[2] *= pair_force;
             //not use 'for' statement for speed
-            
             //#pragma omp atomic
             Segment[num1].acceleration[0] += pair_distance[0];
             //#pragma omp atomic

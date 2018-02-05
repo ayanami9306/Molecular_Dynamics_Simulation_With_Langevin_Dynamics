@@ -11,8 +11,8 @@ double Model_Segment::Rand_Standard_Normal_Dist()
         do
         {
             //x = 2.0*rand()/Rand_Max - 1
-            x1 = 2.0*rand()*inv_RAND_MAX - 1;
-            x2 = 2.0*rand()*inv_RAND_MAX - 1;
+            x1 = 2.0*WELLRNG512a() - 1;
+            x2 = 2.0*WELLRNG512a() - 1;
             
             abs_x = x1*x1 + x2*x2;
         }

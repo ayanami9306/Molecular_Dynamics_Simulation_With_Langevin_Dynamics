@@ -12,7 +12,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include "omp.h"
+//#include "omp.h"
+#include "WELL512a.hpp"
 
 #define NUM_MOLECULE 20000
 #define MAX_CORENUM 30
@@ -39,7 +40,7 @@ private:
     Node Segment[NUM_MOLECULE];
     int nParticle, step_AVG, Limit_Cycle, BOUNDARY_SIZE_X, BOUNDARY_SIZE_Y, BOUNDARY_SIZE_Z, pragma_core, dp_backbone, dp_dendron, generation_dendron, number_branch, num_NebrList, space_sidechain;
     double deltaT, rcut, segment_mass, zeta, rand_deviation, epsilon, rMax, inv_nParticle, inv_RAND_MAX;
-    double deltaT_half, deltaT2_half, rcut2, inverse_rcut6, inverse_rcut12, inv_step_AVG, potential_rcut, kT_0, k_FENE, vvMax, vCM_Total, pot_step, kin_step, time_Now, inv_Rand_Max, accu_movement, radius_NebrShell, bond_length_FENE_0, Lp[10000];
+    double deltaT_half, deltaT2_half, rcut2, inv_step_AVG, potential_rcut, kT_0, k_FENE, vvMax, vCM_Total, pot_step, kin_step, time_Now, inv_Rand_Max, accu_movement, radius_NebrShell, bond_length_FENE_0, Lp[10000], inv_segment_mass;
     unsigned int NebrList_1[50000000], NebrList_2[50000000];
     bool recon_Nebrlist;
     char write_filename[100], dat_filename[100], traj_filename[100], Lp_filename[100];
@@ -54,6 +55,7 @@ public:
     void Read_State(char *filename);
     void Write_State(char *filename);
     double Rand_Standard_Normal_Dist();
+    bool flag;
     
     
 private:
@@ -70,6 +72,7 @@ private:
     void Periodic_Length (double * data);
     void Periodic_Boundary (double * data);
     void Velocity_Verlet_Step();
+    void Velocity_Verlet_After_Step();
     double Calc_Lennard_Jones_Potential();
     double Calc_Bond_Length_Potential_AND_Apply_Langevin();
     void recursive_branch(int parent, int generation);

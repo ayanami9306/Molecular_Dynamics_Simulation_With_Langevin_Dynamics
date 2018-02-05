@@ -9,7 +9,7 @@ void Model_Segment::Molecular_Dynamics()
     Build_NebrList();
     double Rg = 0;
     for(int i=0;i<=dp_backbone/2; i++) Lp[i] = 0;
-    for(int num_Cycle = 0; num_Cycle <= Limit_Cycle; num_Cycle++)
+    for(int num_Cycle = 1; num_Cycle <= Limit_Cycle; num_Cycle++)
     {
         Single_Step();
         if(num_Cycle>Limit_Cycle/2)
@@ -20,14 +20,13 @@ void Model_Segment::Molecular_Dynamics()
             {
                 char temp_filename[100];
                 sprintf(temp_filename, "%s_%08d", write_filename, num_Cycle);
-                //Write_State(temp_filename);
+                Write_State(temp_filename);
                 Mol2_File_Write(false);
-                //Evaluate_Properties();
+                Evaluate_Properties();
                 for(int i=0;i<=dp_backbone/2; i++) Lp[i] = 0;
             }
         }
     }
-    printf("%lf\n", Rg/(Limit_Cycle/2));
 }
 
 

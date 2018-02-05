@@ -43,13 +43,14 @@ void Model_Segment::Set_Params()
     deltaT_half = 0.5*deltaT;
     deltaT2_half = deltaT_half*deltaT;
     rcut2 = rcut*rcut; //rcut unit : sigma
-    inverse_rcut6 = 1.0 / pow(rcut2, 3.0);
     inv_nParticle = 1/(double)nParticle;
     //kT_0 = epsilon * k_b * T
     rand_deviation = sqrt(2*kT_0*segment_mass*zeta/deltaT);
     rMax = bond_length_FENE_0*0.67*0.03;
-    potential_rcut = 4 * inverse_rcut6 * (inverse_rcut6 - 1.0);
+    double inverse_rcut6 = 1.0 / pow(rcut2, 3.0);
+    potential_rcut = 4 * epsilon * inverse_rcut6 * (inverse_rcut6 - 1.0);
     k_FENE = kT_0/1.2*30;
+    inv_segment_mass = 1.0 / (double)segment_mass;
     
     inv_step_AVG = 1.0 / (double)step_AVG;
     
