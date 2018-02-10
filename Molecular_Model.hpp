@@ -38,12 +38,12 @@ class Model_Segment
     //variables
 private:
     Node Segment[NUM_MOLECULE];
-    int nParticle, step_AVG, Limit_Cycle, BOUNDARY_SIZE_X, BOUNDARY_SIZE_Y, BOUNDARY_SIZE_Z, pragma_core, dp_backbone, dp_dendron, generation_dendron, number_branch, num_NebrList, space_sidechain;
+    int nParticle, step_AVG, Limit_Cycle, BOUNDARY_SIZE_X, BOUNDARY_SIZE_Y, BOUNDARY_SIZE_Z, pragma_core, dp_dendron, generation_dendron, number_branch, num_NebrList, space_sidechain;
     double deltaT, rcut, segment_mass, zeta, rand_deviation, epsilon, rMax, inv_nParticle, inv_RAND_MAX;
-    double deltaT_half, deltaT2_half, rcut2, inv_step_AVG, potential_rcut, kT_0, k_FENE, vvMax, vCM_Total, pot_step, kin_step, time_Now, inv_Rand_Max, accu_movement, radius_NebrShell, bond_length_FENE_0, Lp[10000], inv_segment_mass;
+    double deltaT_half, deltaT2_half, rcut2, inv_step_AVG, potential_rcut, kT_0, k_FENE, vvMax, vCM_Total, pot_step, kin_step, time_Now, inv_Rand_Max, accu_movement, radius_NebrShell, bond_length_FENE_0, Lp[10000], inv_segment_mass, bond_length;
     unsigned int NebrList_1[50000000], NebrList_2[50000000];
     bool recon_Nebrlist;
-    char write_filename[100], dat_filename[100], traj_filename[100], Lp_filename[100];
+    char write_filename[100], dat_filename[100], traj_filename[100], Lp_filename[100], Rg_filename[100];
     
     //methods
 public:
@@ -55,7 +55,7 @@ public:
     void Read_State(char *filename);
     void Write_State(char *filename);
     double Rand_Standard_Normal_Dist();
-    bool flag;
+    int dp_backbone;
     
     
 private:

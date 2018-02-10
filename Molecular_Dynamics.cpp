@@ -8,6 +8,7 @@ void Model_Segment::Molecular_Dynamics()
     MINI_MC(50000);
     Build_NebrList();
     double Rg = 0;
+    bond_length = 0;
     for(int i=0;i<=dp_backbone/2; i++) Lp[i] = 0;
     for(int num_Cycle = 1; num_Cycle <= Limit_Cycle; num_Cycle++)
     {
@@ -24,9 +25,13 @@ void Model_Segment::Molecular_Dynamics()
                 Mol2_File_Write(false);
                 Evaluate_Properties();
                 for(int i=0;i<=dp_backbone/2; i++) Lp[i] = 0;
+                bond_length = 0;
             }
         }
     }
+    FILE *fp = fopen(Rg_filename,"a");
+    fprintf(fp,"%d,%lf\n",dp_backbone,Rg/(Limit_Cycle/2));
+    fclose(fp);
 }
 
 

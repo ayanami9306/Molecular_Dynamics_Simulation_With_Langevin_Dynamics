@@ -46,7 +46,7 @@ double Model_Segment::Calc_Lennard_Jones_Potential()
 double Model_Segment::Calc_Bond_Length_Potential_AND_Apply_Langevin()
 {
     double pot_temp = 0;
-    double random_num[10000];
+    double random_num[100000];
     for(int i=0;i<nParticle*3;i++) random_num[i] = Rand_Standard_Normal_Dist();
 //#pragma omp parallel reduction(+:                                                                                                                    pot_temp)
     {
@@ -64,7 +64,7 @@ double Model_Segment::Calc_Bond_Length_Potential_AND_Apply_Langevin()
                     {
                         //FENE potential
                         //U = -0.5*k*R0^2*ln(1-(r/R0)^2)) (r < R0), else U = inf
-                        //F = -k*r/(1-(r/R0)^2)
+                        //F = -k*r/(1-(r/R0)^2 )
                         double distance_ratio = distance / bond_length_FENE_0;
                         double bond_force = -k_FENE/(1-pow(distance_ratio, 2.0));
                         bond_distance[0] *= bond_force;
