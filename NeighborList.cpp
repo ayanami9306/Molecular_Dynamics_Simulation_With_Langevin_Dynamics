@@ -3,7 +3,7 @@
 void Model_Segment::Build_NebrList()
 {
     num_NebrList = 0;
-    double r2_Nebr = (rcut + radius_NebrShell) * (rcut + radius_NebrShell);
+    double r2_Nebr = pow(rcut + radius_NebrShell, 2.0);
     for(int i=0; i<nParticle-1; i++)
     {
         for(int j=i+1; j<nParticle; j++)

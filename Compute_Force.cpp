@@ -13,6 +13,7 @@ void Model_Segment::Compute_Forces()
         accu_movement = 0;
         Build_NebrList();
     }
+    vvMax = 0;
     
     //calculate force
     //Lennard-Jones Potential and Bond Stretching Potential

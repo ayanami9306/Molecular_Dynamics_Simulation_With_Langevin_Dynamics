@@ -13,6 +13,8 @@ void Model_Segment::Velocity_Verlet_Step()
         Temp->velocity[1] += Temp->acceleration[1] * deltaT_half;
         Temp->velocity[2] += Temp->acceleration[2] * deltaT_half;
         
+        
+        
         Temp->acceleration[0] = -zeta * segment_mass * Temp->velocity[0];
         Temp->acceleration[1] = -zeta * segment_mass * Temp->velocity[1];
         Temp->acceleration[2] = -zeta * segment_mass * Temp->velocity[2];
@@ -21,7 +23,7 @@ void Model_Segment::Velocity_Verlet_Step()
 
 void Model_Segment::Velocity_Verlet_After_Step()
 {
-    double e_kin = 0;
+    double e_kin = 0, temp_vv;
     double vCM[3] = {0, 0, 0};
     for(int i=0;i<nParticle;i++)
     {
@@ -29,7 +31,9 @@ void Model_Segment::Velocity_Verlet_After_Step()
         Segment[i].velocity[1] += Segment[i].acceleration[1]*deltaT_half;
         Segment[i].velocity[2] += Segment[i].acceleration[2]*deltaT_half;
         
-        e_kin += Get_V2(i);
+        temp_vv = Get_V2(i);
+        e_kin += temp_vv;
+        if(temp_vv > vvMax) vvMax = temp_vv;
         vCM[0] += Segment[i].velocity[0];
         vCM[1] += Segment[i].velocity[1];
         vCM[2] += Segment[i].velocity[2];
