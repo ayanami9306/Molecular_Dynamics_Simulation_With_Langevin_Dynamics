@@ -46,6 +46,7 @@ void Model_Segment::recursive_branch(int parent, int generation)
             Segment[nParticle].coordinate[0] = Segment[previous_node].coordinate[0] + bond_length_FENE_0 * 0.67 * sin(bond_angle)*cos(torsional_angle);
             Segment[nParticle].coordinate[1] = Segment[previous_node].coordinate[1] + bond_length_FENE_0 * 0.67 * sin(bond_angle)*sin(torsional_angle);
             Segment[nParticle].coordinate[2] = Segment[previous_node].coordinate[2] + bond_length_FENE_0 * 0.67 * cos(bond_angle);
+            Segment[nParticle].linked_segment_num = 0;
             Segment[nParticle].segment_type = 1;
             Segment[previous_node].linked_segment[Segment[previous_node].linked_segment_num++] = nParticle;
             Segment[nParticle].linked_segment[Segment[nParticle].linked_segment_num++] = previous_node;

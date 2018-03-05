@@ -18,4 +18,3 @@ void Model_Segment::Build_NebrList()
         }
     }
 }
-

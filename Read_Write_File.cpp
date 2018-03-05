@@ -29,6 +29,45 @@ void Model_Segment::Write_State(char *filename)
     fclose(fp);
 }
 
+void Model_Segment::Print_LAMMPS()
+{
+    char filename[100];
+    sprintf(filename, "%s.txt",write_filename);
+    FILE *fp = fopen(filename, "w");
+    
+    fprintf(fp,"LAMMPS Description\n\n");
+    
+    fprintf(fp,"%d atoms\n",dp_backbone);
+    fprintf(fp,"%d bonds\n\n",dp_backbone-1);
+    
+    fprintf(fp,"1 atom types\n");
+    fprintf(fp,"1 bond types\n\n");
+    
+    fprintf(fp,"-100.0000 100.0000 xlo xhi\n");
+    fprintf(fp,"-100.0000 100.0000 ylo yhi\n");
+    fprintf(fp,"-100.0000 100.0000 zlo zhi\n\n");
+    
+    fprintf(fp,"Masses\n\n 1 1.0\n");
+    
+    fprintf(fp,"\nAtoms\n\n");
+    for(int i=0;i<dp_backbone;i++)
+        fprintf(fp," %d %d %d %lf %lf %lf\n",i+1, 1, 1, Segment[i].coordinate[0], Segment[i].coordinate[1], Segment[i].coordinate[2]);
+    fprintf(fp, "\nBonds\n\n");
+    int count =1;
+    for(int i=0;i<dp_backbone;i++)
+    {
+        for(int j=0;j<Segment[i].linked_segment_num;j++)
+        {
+            int num2 = Segment[i].linked_segment[j];
+            if(i<num2)
+            {
+                fprintf(fp," %d %d %d %d\n", count, 1, i+1, num2+1);
+                count++;
+            }
+        }
+    }
+}
+
 //don't use for dendronized polymer(some bugs about VMD or Material Studio)
 void Model_Segment::PDB_File_Write(bool is_new_file)
 {
