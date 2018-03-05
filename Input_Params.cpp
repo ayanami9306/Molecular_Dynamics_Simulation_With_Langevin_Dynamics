@@ -30,10 +30,13 @@ void Model_Segment::Input_Params(char *filename)
         else if(!strcmp(property_name, "number_branch")) number_branch   = atoi(property_value);
         else if(!strcmp(property_name, "space_sidechain")) space_sidechain   = atoi(property_value);
         else if(!strcmp(property_name, "epsilon")) epsilon = atof(property_value);
+        else if(!strcmp(property_name, "bond_angle_0")) bond_angle_0 = atof(property_value)/180.0 * PI;
+        else if(!strcmp(property_name, "bond_angle_k")) bond_angle_k = atof(property_value);
     }
     fclose(fp);
     sprintf(Rg_filename, "%s_Rg.csv", write_filename);
     fp = fopen(Rg_filename, "w");
+    fprintf(fp,"N,Rx_side,Ry_side,Rz_side,Rg_side,Rx_back,Ry_back,Rz_back,Rg_back,Rx_total,Ry_total,Rz_total,Rg_total\n");
     fclose(fp);
 }
 
@@ -53,7 +56,8 @@ void Model_Segment::Set_Params()
     rMax = bond_length_FENE_0*0.67*0.03;
     double inverse_rcut6 = 1.0 / pow(rcut2, 3.0);
     potential_rcut = 4 * epsilon * inverse_rcut6 * (inverse_rcut6 - 1.0);
-    k_FENE =24.4 + 5.8*kT_0 - 0.2*kT_0*kT_0;
+    //k_FENE =24.4 + 5.8*kT_0 - 0.2*kT_0*kT_0;
+    k_FENE = (kT_0/1.2)*30;
     inv_segment_mass = 1.0 / (double)segment_mass;
     
     inv_step_AVG = 1.0 / (double)step_AVG;

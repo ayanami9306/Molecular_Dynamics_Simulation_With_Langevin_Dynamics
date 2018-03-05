@@ -1,6 +1,6 @@
 #include "Molecular_Model.hpp"
 
-double Model_Segment::Calc_Lennard_Jones_Potential()
+double Model_Segment::Calc_Nonbonded_Potential()
 {
     double pot_temp = 0;
 //#pragma omp parallel for reduction (+:pot_temp)
@@ -43,10 +43,10 @@ double Model_Segment::Calc_Lennard_Jones_Potential()
     return pot_temp;
 }
 
-double Model_Segment::Calc_Bond_Length_Potential_AND_Apply_Langevin()
+double Model_Segment::Calc_Bonded_Potential_AND_Apply_Langevin()
 {
-    double pot_temp = 0;
-    double random_num[100000];
+    double pot_temp_FENE = 0, pot_temp_Angle=0;
+    double random_num[1000000];
     for(int i=0;i<nParticle*3;i++) random_num[i] = Rand_Standard_Normal_Dist();
 //#pragma omp parallel reduction(+:                                                                                                                    pot_temp)
     {
@@ -55,11 +55,11 @@ double Model_Segment::Calc_Bond_Length_Potential_AND_Apply_Langevin()
         {
             for(int j=0; j<Segment[i].linked_segment_num; j++)
             {
-                if(i < Segment[i].linked_segment[j])
+                int num_prev = Segment[i].linked_segment[j];
+                if(i < num_prev)
                 {
-                    int num2 = Segment[i].linked_segment[j];
                     double bond_distance[3];
-                    double distance = sqrt(Get_Distance2(i, num2, bond_distance));
+                    double distance = sqrt(Get_Distance2(i, num_prev, bond_distance));
                     if(distance < bond_length_FENE_0)
                     {
                         //FENE potential
@@ -77,15 +77,67 @@ double Model_Segment::Calc_Bond_Length_Potential_AND_Apply_Langevin()
                         //#pragma omp atomic
                         Segment[i].acceleration[2] += bond_distance[2];
                         //#pragma omp atomic
-                        Segment[num2].acceleration[0] -= bond_distance[0];
+                        Segment[num_prev].acceleration[0] -= bond_distance[0];
                         //#pragma omp atomic
-                        Segment[num2].acceleration[1] -= bond_distance[1];
+                        Segment[num_prev].acceleration[1] -= bond_distance[1];
                         //#pragma omp atomic
-                        Segment[num2].acceleration[2] -= bond_distance[2];
+                        Segment[num_prev].acceleration[2] -= bond_distance[2];
                         
-                        pot_temp += log(1-pow(distance_ratio, 2.0));
+                        pot_temp_FENE += log(1-pow(distance_ratio, 2.0));
                     }
                 }
+#if APPLY_BOND_ANGLE
+                if(Segment[i].segment_type)
+                {
+                    for(int k=j+1; k<Segment[i].linked_segment_num; k++)
+                    {
+                        int num_next = Segment[i].linked_segment[k];
+                        if(Segment[num_next].segment_type || Segment[num_prev].segment_type)
+                        {
+                            double bond_prev[3], bond_next[3];
+                            //ba vector
+                            double distance_prev = sqrt(Get_Distance2(num_prev, i, bond_prev));
+                            //bc vector
+                            double distance_next = sqrt(Get_Distance2(num_next, i, bond_next));
+                            
+                            double Cos_Value = scalar_multiply(bond_prev, bond_next) / (distance_prev * distance_next);
+                            double bond_angle;
+                            if(Cos_Value >= 1) bond_angle = 0;
+                            else if(Cos_Value <= -1) bond_angle = PI;
+                            else bond_angle = acos(Cos_Value);
+                            double Force_A[3], Force_B[3], Force_C[3];
+                            
+                            double dU = 2*bond_angle_k*(bond_angle - bond_angle_0);
+                            
+                            double BA_BC[3];
+                            Vector_Cross(bond_prev, bond_next, BA_BC);
+                            Vector_Cross(bond_prev, BA_BC, Force_A);
+                            Normalize_Vector(Force_A);
+                            Vector_Constant(Force_A, -dU/distance_prev, Force_A);
+                            Vector_Constant(bond_next, -1, bond_next);
+                            Vector_Cross(bond_next, BA_BC, Force_C);
+                            Normalize_Vector(Force_C);
+                            Vector_Constant(Force_C, -dU/distance_next, Force_C);
+                            
+                            Force_B[0] = -Force_A[0] -Force_C[0];
+                            Force_B[1] = -Force_A[1] -Force_C[1];
+                            Force_B[2] = -Force_A[2] -Force_C[2];
+                            
+                            Segment[num_prev].acceleration[0] += Force_A[0];
+                            Segment[num_prev].acceleration[1] += Force_A[1];
+                            Segment[num_prev].acceleration[2] += Force_A[2];
+                            Segment[i].acceleration[0] += Force_B[0];
+                            Segment[i].acceleration[1] += Force_B[1];
+                            Segment[i].acceleration[2] += Force_B[2];
+                            Segment[num_next].acceleration[0] += Force_C[0];
+                            Segment[num_next].acceleration[1] += Force_C[1];
+                            Segment[num_next].acceleration[2] += Force_C[2];
+                            
+                            pot_temp_Angle += pow(bond_angle-bond_angle_0, 2.0);
+                        }
+                    }
+                }
+#endif
             }
             //add random force for speed
             //ma = -m*zeta*v + F + random_force
@@ -95,5 +147,5 @@ double Model_Segment::Calc_Bond_Length_Potential_AND_Apply_Langevin()
             Segment[i].acceleration[2] += rand_deviation * random_num[ran_pos+2];
         }
     }
-    return -0.5*k_FENE*pow(bond_length_FENE_0, 2.0)*pot_temp;
+    return -0.5*k_FENE*pow(bond_length_FENE_0, 2.0)*pot_temp_FENE + bond_angle_k * pot_temp_Angle;
 }
